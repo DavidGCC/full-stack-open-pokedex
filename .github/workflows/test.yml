@@ -25,7 +25,7 @@ jobs:
       - name: dont run if contains
         env:
           COMMIT_MESSAGES: ${{ github.event.head_commit.message }}
-        if: ${{ !contains(COMMIT_MESSAGES, "#skip") }}
+        if: ${{ !contains($COMMIT_MESSAGES, "#skip") }}
         run: echo "THIS IS RUN THEREFORE COMMIT DOESNT CONTAIN hashtag skip"
 
 
