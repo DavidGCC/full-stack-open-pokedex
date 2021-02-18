@@ -10,6 +10,10 @@ app.get('/healthcheck', (req, res) => {
   res.send('works')
 })
 
+app.get('/version', (req, res) => {
+  res.send('release v10')
+})
+
 app.listen(PORT, () => {
   console.log('server started on port 5000') //eslint-disable-line
 })
