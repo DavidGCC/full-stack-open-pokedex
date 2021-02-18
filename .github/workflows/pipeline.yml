@@ -59,11 +59,12 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: custom
+          fields: commit, author, took
           custom_payload: |
             {
               attachments: [{
                 color: 'good',
-                text: `a new version deployed to http://pokedex-fullstackopen.herokuapp.com (process.env.AS_COMMIT)\nby ${process.env.AS_AUTHOR}\bbuild took ${process.env.AS_TOOK}`
+                text: `a new version deployed to http://pokedex-fullstackopen.herokuapp.com ${process.env.AS_COMMIT}\nby ${process.env.AS_AUTHOR}\nbuild took ${process.env.AS_TOOK}`
               }]
             }
         env:
