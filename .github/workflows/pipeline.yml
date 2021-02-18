@@ -41,6 +41,24 @@ jobs:
           healthcheck: "http://pokedex-fullstackopen.herokuapp.com/healthcheck"
           checkstring: "works"
           rollbackonhealthcheckfailed: true
+      - name: failure notification to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo, commit, message, took, author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: ${{ failure() }}
+      - name: notification to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo, commit, took, author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: ${{ success() }}
+      
+
   tagging:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
     runs-on: ubuntu-18.04
