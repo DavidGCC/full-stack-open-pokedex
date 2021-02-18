@@ -23,7 +23,7 @@ jobs:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: dont run if contains
-        if: "! contains(toJson(github.event.commits.*.message), '[#skip]')"
+        if: "! contains(join(github.event.commits.*.message), '[#skip]')"
         run: echo "THIS IS RUN THEREFORE COMMIT DOESNT CONTAIN hashtag skip"
 
 
