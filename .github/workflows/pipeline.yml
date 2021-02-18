@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - master
-
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
 jobs:
   deployment_pipeline:
     runs-on: "ubuntu-18.04"
