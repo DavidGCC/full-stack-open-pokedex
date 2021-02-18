@@ -11,39 +11,45 @@ jobs:
   deployment_pipeline:
     runs-on: "ubuntu-18.04"
     steps:
-        - uses: actions/checkout@v2
-          with:
-            fetch-depth: '0'
-        - uses: actions/setup-node@v1
-          with:
-            node-version: "12.x"
-        - name: npm install
-          run: npm install
-        - name: lint
-          run: npm run eslint
-        - name: build
-          run: npm run build
-        - name: test
-          run: npm run test
-        - name: e2e test
-          uses: cypress-io/github-action@v2
-          with:
-            command: npm run test:e2e
-            start: npm run start-prod
-            wait-on: http://localhost:5000
-        - name: deploy to heroku
-          if: ${{ github.event_name == 'push' }}
-          uses: akhileshns/heroku-deploy@v3.11.10
-          with:
-            heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-            heroku_app_name: "pokedex-fullstackopen"
-            heroku_email: "datog309@gmail.com"
-            healthcheck: "http://pokedex-fullstackopen.herokuapp.com/healthcheck"
-            checkstring: "works"
-            rollbackonhealthcheckfailed: true
-        - name: Bump version and push tag
-          if: ${{ github.event_name == 'push' }}
-          uses: anothrNick/github-tag-action@1.33.0
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            DEFAULT_BUMP: patch
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: npm install
+        run: npm install
+      - name: lint
+        run: npm run eslint
+      - name: build
+        run: npm run build
+      - name: test
+        run: npm run test
+      - name: e2e test
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:5000
+      - name: deploy to heroku
+        if: ${{ github.event_name == 'push' }}
+        uses: akhileshns/heroku-deploy@v3.11.10
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "pokedex-fullstackopen"
+          heroku_email: "datog309@gmail.com"
+          healthcheck: "http://pokedex-fullstackopen.herokuapp.com/healthcheck"
+          checkstring: "works"
+          rollbackonhealthcheckfailed: true
+  tagging:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout repository
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/checkout@v2
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@1.33.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
