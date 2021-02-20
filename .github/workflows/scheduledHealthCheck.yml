@@ -1,9 +1,8 @@
 name: Scheduled Health Check
 
 on:
-  push:
-    branches:
-    - master
+  schedule:
+    - cron: "35 16 * * *"
 
 jobs:
   healthcheck:
@@ -13,5 +12,5 @@ jobs:
         uses: jtalk/url-health-check-action@v1.4
         with:
           url: "http://pokedex-fullstackopen.herokuapp.com/healthcheck"
-          retry-delay: 24h
+          retry-delay: 5s
 
