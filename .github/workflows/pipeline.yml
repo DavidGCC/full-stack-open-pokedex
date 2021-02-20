@@ -31,14 +31,14 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
-      # - name: failure notification to slack
-      #   if: ${{ failure() }}
-      #   uses: 8398a7/action-slack@v3
-      #   with:
-      #     status: ${{ job.status }}
-      #     fields: repo, commit, message, took, author
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: failure notification to slack
+        if: ${{ failure() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo, commit, message, took, author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   deply_to_heroku:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message), '#skip') }}
@@ -55,21 +55,21 @@ jobs:
           healthcheck: "http://pokedex-fullstackopen.herokuapp.com/healthcheck"
           checkstring: "works"
           rollbackonhealthcheckfailed: true
-      # - name: notification to slack
-      #   uses: 8398a7/action-slack@v3
-      #   with:
-      #     status: custom
-      #     fields: commit, author, took
-      #     custom_payload: |
-      #       {
-      #         attachments: [{
-      #           color: 'good',
-      #           text: `a new version deployed to http://pokedex-fullstackopen.herokuapp.com ${process.env.AS_COMMIT}\nby ${process.env.AS_AUTHOR}\nbuild took ${process.env.AS_TOOK}`
-      #         }]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #   if: ${{ success() }}
+      - name: notification to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: commit, author, took
+          custom_payload: |
+            {
+              attachments: [{
+                color: 'good',
+                text: `a new version deployed to http://pokedex-fullstackopen.herokuapp.com ${process.env.AS_COMMIT}\nby ${process.env.AS_AUTHOR}\nbuild took ${process.env.AS_TOOK}`
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: ${{ success() }}
       
 
   tagging:
